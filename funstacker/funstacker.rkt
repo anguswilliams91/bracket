@@ -12,7 +12,8 @@
   #'(#%module-begin
      (display (first HANDLE-ARGS-EXPR))))
 (provide (rename-out [funstacker-module-begin #%module-begin]))
-(define stack empty)
+
+(define (flip stack) (reverse stack))
 
 (define (handle-args . args)
   (for/fold ([stack-acc empty])
@@ -23,7 +24,9 @@
       [(or (equal? * arg) (equal? + arg))
        (define op-result
          (arg (first stack-acc) (second stack-acc)))
-       (cons op-result (drop stack-acc 2))])))
+       (cons op-result (drop stack-acc 2))]
+      [(equal? flip arg)
+         (arg stack-acc)])))
 (provide handle-args)
 
-(provide * +)
+(provide * + flip)
